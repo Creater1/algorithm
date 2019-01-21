@@ -85,14 +85,15 @@ class GA():
         再进行随机选择，选出适应度虽然小，但是幸存下来的个体
         """
         #对适应度从大到小排序
-        graded = sorted(solution, reverse= True)
+        graded = [(self.fitness(chromosome), chromosome) for chromosome in self.population]
+        test =  sorted(graded, reverse=True)
+        graded = [x[1] for x in test]
         # 选择适应度强的函数
         retain_length = int(len(graded)*retain_rate)
         parents = solution[:retain_length]
         for solution in solution[retain_length:]:
             if random.random() < random_select_rate:
                 parents.append(solution)
-        parents = sorted(parents, reverse=True)
         return parents
 
     #交叉编译
@@ -115,8 +116,8 @@ class GA():
                 mask = 0
                 for i in range(cross_pos):
                     mask |= (1 << i)
-                male = int(parents[male])
-                female = int(parents[female])
+                male = parents[male]
+                female = parents[female]
                 # 孩子将获得父亲在交叉点前的基因和母亲在交叉点后（包括交叉点）的基因
                 gen_parants = ((male & mask) | (female & ~mask))
                 length = ((1 << self.length) - 1)
@@ -135,7 +136,7 @@ class GA():
         for i in range(len(self.population)):
             if random.random() < rate:
                 j = random.randint(0, self.length - 1)
-                population = int(self.population[i])
+                population = self.population[i]
                 population ^= 1 << j
 
 
@@ -150,8 +151,8 @@ class GA():
         """
         # print(self.population)
         # graded = [(self.fitness(chromosome), chromosome) for chromosome in self.population]
-        graded = self.fitness(self.population)
-        graded = sorted(graded, reverse=True)
+        graded = [(self.fitness(chromosome), chromosome) for chromosome in self.population]
+        graded = [x[1] for x in sorted(graded, reverse=True)]
         # print(graded)
         return ga.decode(graded[0])
 
@@ -172,21 +173,19 @@ class GA():
 
 
 if __name__ == '__main__':
-    # retain_rate = 0.2
-    # random_select_rate = 0.5
-    # # 编译比例
-    # mutation_rate = 0.01
+    retain_rate = 0.2
+    random_select_rate = 0.5
+     # 编译比例
+    mutation_rate = 0.01
     ga = GA(3,20)
-    # chromosome = ga.gen_population(ga.length, ga.count)
-    # #转化为[0-9]之间的数据
-    # one_to_nine = ga.decode(chromosome)
-    # solution = ga.fitness(one_to_nine)
-    # for x in range(100):
-    #     ga.evolve(retain_rate, random_select_rate, solution)
-    # print(ga.result())
+    # 转化为[0-9]之间的数据
+    chromosome = ga.gen_population(ga.length, ga.count)
+    for x in range(100):
+        ga.evolve(retain_rate, random_select_rate, chromosome)
+    print(ga.result())
 
-#     测试dec_to_bin函数
-    ga.dec_to_bin(0.4)
+# #     测试dec_to_bin函数
+#     ga.dec_to_bin(0.4)
 
 
 

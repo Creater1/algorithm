@@ -4,7 +4,4 @@ from sklearn.ensemble import RandomForestClassifier
 import pandas as pd
 import numpy as np
 
-dataset = genfromtxt('data.csv', delimiter=",")
-x = dataset[1:, 0:4]
-y = dataset[1:, 4]
-clf = RandomForestClassifier(n_jobs= 2, )
+print(sorted({9: 'D', 2: 'B', 3: 'B', 4: 'E', 5: 'A'}))
