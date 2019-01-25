@@ -24,7 +24,11 @@ class GA():
         for i in range(count):
             gene = 0
             for j in range(length):
-                gene |= (1 << j) * random.randint(0, 1)
+                test_j = 1 << j
+                c = (test_j).bit_length()
+                zero_one = test_j * random.randint(0, 1)
+                gene |= zero_one
+                gene_byte = (gene).bit_length()
             chromosome.append(gene)
         return chromosome
 
@@ -177,7 +181,7 @@ if __name__ == '__main__':
     random_select_rate = 0.5
      # 编译比例
     mutation_rate = 0.01
-    ga = GA(3,20)
+    ga = GA(7,20)
     # 转化为[0-9]之间的数据
     chromosome = ga.gen_population(ga.length, ga.count)
     for x in range(100):
